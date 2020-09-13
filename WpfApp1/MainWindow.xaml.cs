@@ -71,7 +71,7 @@ namespace WpfApp1
 
 
             OracleCommand cmd = con.CreateCommand();
-            cmd.CommandText = "select * from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id WHERE UPPER(city.name) = UPPER('Миасс') or UPPER(firm.name) = UPPER('мир света') ORDER BY city.name";
+            cmd.CommandText = "select * from firm";
             //cmd.CommandText = d;
             cmd.CommandType = CommandType.Text;
             OracleDataReader dr = cmd.ExecuteReader();
@@ -80,18 +80,6 @@ namespace WpfApp1
             myDataGrid.ItemsSource = dt.DefaultView;
             dr.Close();
 
-            //string queryString = "SELECT * FROM FIRM";
-            //using (OracleConnection connection = new OracleConnection(conStr()))
-            //{
-
-            //    OracleCommand command = new OracleCommand(queryString, connection);
-            //    connection.Open();
-            //    OracleDataReader reader = command.ExecuteReader();
-            //    DataTable dt = new DataTable();
-            //    dt.Load(reader);
-            //    myDataGrid.ItemsSource = dt.DefaultView;
-            //    reader.Close();
-            //}
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
