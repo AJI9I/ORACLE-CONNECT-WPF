@@ -71,7 +71,7 @@ namespace WpfApp1
 
 
             OracleCommand cmd = con.CreateCommand();
-            cmd.CommandText = "select * from firm";
+            cmd.CommandText = "select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id WHERE UPPER(city.name) = UPPER('') or UPPER(firm.name) = UPPER('')";
             //cmd.CommandText = d;
             cmd.CommandType = CommandType.Text;
             OracleDataReader dr = cmd.ExecuteReader();
