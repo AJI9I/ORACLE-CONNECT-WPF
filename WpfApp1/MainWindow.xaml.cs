@@ -110,7 +110,7 @@ namespace WpfApp1
         private void VisibleCityFields() {
 
             progVar.TName = "CITY";
-            TexBoxReset();
+            
 
             CityNameLabel.Content = "Название города";
             CityNameJURLabel.Visibility = Visibility.Hidden;
@@ -119,27 +119,23 @@ namespace WpfApp1
             CityNamePostTextBox.Visibility = Visibility.Hidden;
 
             BtnVisible();
+            TexBoxReset();
 
-            String sql = querySql.sqlCityTable();
-            this.AUD(99, sql);
+            this.AUD(7);
         }
 
-        
         //клик на кнопку FIRM
         private void FirmBtnTable_Click(object sender, RoutedEventArgs e)
         {
             progVar.TName = "FIRM";
-            TexBoxReset();
+            
 
             VisibleFirmFields();
+            TexBoxReset();
 
-            String sql = querySql.sqlFirmTable();
-            this.AUD(99, sql);
+            this.AUD(6);
         }
 
-        
-
-        
         private void VisibleFirmFields()
         {
             CityNameLabel.Content = "Название фирмы";
@@ -159,11 +155,11 @@ namespace WpfApp1
             
             
 
-            if (Content == "T FIRM") {
+            if (progVar.TName == "FIRM") {
 
                 BtnVisible();
             }
-            if (Content == "Find")
+            if (progVar.TName == "FIND")
             {
                 BtnHidden();
             }
@@ -183,21 +179,19 @@ namespace WpfApp1
         }
 
         private void FindMenuOpen() {
+
             progVar.TName = "FIND";
             TexBoxReset();
 ;
             VisibleFirmFields();
 
-
-            String sql = querySql.sqlCityFirmsTable();
-            this.AUD(99, sql);
+            this.AUD(5);
         }
 
         //клик на кнопку поиск
         private void FindBtn_Click(object sender, RoutedEventArgs e)
         {
-            String sql = "";
-            this.AUD(2, sql);
+            this.AUD(2);
         }
 
 
@@ -209,9 +203,15 @@ namespace WpfApp1
             TexBoxReset();
         }
         private void TexBoxReset() {
+
+            ResetBtn.IsEnabled = false;
+            DeleteBtn.IsEnabled = false;
+            UpdateBtn.IsEnabled = false;
+
             CityNameTextBox.Text = "";
             CityNamePostTextBox.Text = "";
             CityNameJurTextBox.Text = "";
+
         }
         #endregion
 
@@ -236,31 +236,54 @@ namespace WpfApp1
         #endregion
 
         #region Оправляем запросы через эту функцию и принимаем ответ в датагрид
-        private void AUD(int state, string sql) {
+        private void AUD(int state) {
             
 
             OracleCommand cmd = con.CreateCommand();
-            cmd.CommandText = sql;
             cmd.CommandType = CommandType.Text;
 
             string one = CityNameTextBox.Text.ToString();
             string two = CityNameJurTextBox.Text.ToString();
             string tre = CityNamePostTextBox.Text.ToString();
 
-
+            string sql = "select * from city";
 
             switch (state) {
                 case 0:
-                    cmd.CommandText = querySql.sqlAddCityTable(one);
+                    //добавить город
+                    sql = querySql.sqlAddCityTable(one);
                     break;
                 case 1:
-                    cmd.CommandText = querySql.sqlAddFirmTable(one, two, tre);
+                    //добавить фирму
+                    sql = querySql.sqlAddFirmTable(one, two, tre);
                     break;
                 case 2:
-                    cmd.CommandText = querySql.sqlFindFirm(one, two);
+                    //найти фирму
+                    sql = querySql.sqlFindFirm(one, two);
+                    break;
+                case 3:
+                    //Таблица в шахматном порядке
+                    sql = querySql.sqlGetDataSummTable();
+                    break;
+                case 4:
+                    //добавить рандомную запись с датой
+                    sql = querySql.sqlRandDataSummTable();
+                    break;
+                case 5:
+                    //вывести фирмыГорода
+                    sql = querySql.sqlCityFirmsTable();
+                    break;
+                case 6:
+                    //фирмы
+                    sql = querySql.sqlFirmTable();
+                    break;
+                case 7:
+                    //города
+                    sql = querySql.sqlCityTable();
                     break;
 
             }
+            cmd.CommandText = sql;
 
             OracleDataReader dr = cmd.ExecuteReader();
             DataTable dt = new DataTable();
@@ -275,13 +298,12 @@ namespace WpfApp1
         #region Клик на кнопку добавить запись
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
-            String sql = "";
             switch (progVar.TName) {
                 case "CITY":
-                    this.AUD(0, sql);
+                    this.AUD(0);
                     break;
                 case "FIRM":
-                    this.AUD(1, sql);
+                    this.AUD(1);
                     break;
             }
         }
@@ -291,18 +313,16 @@ namespace WpfApp1
         //Выбор вкладки Задание 2
         private void TabItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            String sql = querySql.sqlGetDataSummTable();
-            this.AUD(99, sql);
+            progVar.TName = "TAB2";
+            this.AUD(3);
         }
 
         //Кнопка добавить рандомное значение
         private void AddRandBtn_Click(object sender, RoutedEventArgs e)
         {
-            String sql = querySql.sqlRandDataSummTable();
-            this.AUD(99, sql);
+            this.AUD(4);
 
-            sql = querySql.sqlGetDataSummTable();
-            this.AUD(99, sql);
+            this.AUD(3);
         }
 
         #region хлам
@@ -353,7 +373,64 @@ namespace WpfApp1
 
         }
         #endregion
+
         #endregion
 
+        private void myDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataGrid dataGrid = sender as DataGrid;
+            DataRowView dataRowView = dataGrid.SelectedItem as DataRowView;
+
+            if (dataRowView != null) {
+                if (progVar.TName == "CITY")
+                {
+
+                    CityNameTextBox.Text = dataRowView["Город"].ToString();
+                }
+                if (progVar.TName == "FIRM")
+                {
+
+                    CityNameTextBox.Text = dataRowView["Фирма"].ToString();
+
+                    //CityNameJurTextBox.Text = GetTableField(dataRowView["ЮИД"].ToString());
+
+                    //CityNamePostTextBox.Text = GetTableField(dataRowView["ПИД"].ToString());
+                }
+            }
+
+            ResetBtn.IsEnabled = true;
+            DeleteBtn.IsEnabled = true;
+            UpdateBtn.IsEnabled = true;
+
+        }
+
+        private string GetTableField(string id) {
+
+            OracleCommand cmd = con.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+
+            cmd.CommandText = String.Format("select c.city_id as id, c.name as n from city c where c.city_id = {0}", id);
+
+            OracleDataReader dr = cmd.ExecuteReader();
+
+            DataTable dataTable = new DataTable();
+            dataTable.Load(dr);
+            var v = dataTable.HasErrors;
+
+            DataGrid dg = new DataGrid();
+            dg.ItemsSource = dataTable.DefaultView;
+            DataRowView dataRowView = dg.SelectedItem as DataRowView;
+
+            dr.Close();
+
+            
+
+            return dataRowView["n"].ToString();
+        }
+
+        private void TabGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            FindMenuOpen();
+        }
     }
 }

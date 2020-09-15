@@ -109,7 +109,7 @@ namespace WpfApp1
         }
 
         public string sqlCityFirmsTable() {
-            return String.Format("select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД " +
+            return String.Format("select city.name as Город, firm.name as Фирма, firm.jur_city_id as ЮИД, firm.post_city_id as ПИД " +
                 "from city " +
                 "inner JOIN firm " +
                 "on city.city_id = firm.jur_city_id " +
@@ -124,7 +124,7 @@ namespace WpfApp1
         }
 
         public string sqlFirmTable() {
-            return String.Format("select FIRM_ID as ИД, name as Фирма, jur_city_id as сИД, post_city_id as фИД " +
+            return String.Format("select FIRM_ID as ИД, name as Фирма, jur_city_id as ЮИД, post_city_id as ПИД " +
                 "from firm " +
                 "ORDER BY name");
         }

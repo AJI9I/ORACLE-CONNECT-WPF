@@ -14,11 +14,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="myDataGrid" HorizontalAlignment="Left" Height="299" Margin="322,10,0,0" VerticalAlignment="Top" Width="678" Grid.RowSpan="2"/>
+        <DataGrid x:Name="myDataGrid" HorizontalAlignment="Left" Height="299" Margin="322,10,0,0" VerticalAlignment="Top" Width="678" Grid.RowSpan="2" SelectionChanged="myDataGrid_SelectionChanged"/>
         <Button x:Name="AddBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="AddBtn_Click"/>
         <Button x:Name="UpdateBtn" Content="Обновить" HorizontalAlignment="Left" Margin="221,218,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
         <Button x:Name="ResetBtn" Content="Сбросить" HorizontalAlignment="Left" Margin="120,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="ResetBtn_Click"/>
-        <TabControl x:Name="TabGrid" HorizontalAlignment="Left" Height="200" Margin="10,13,0,0" VerticalAlignment="Top" Width="294">
+        <TabControl x:Name="TabGrid" HorizontalAlignment="Left" Height="200" Margin="10,13,0,0" VerticalAlignment="Top" Width="294" Loaded="TabGrid_Loaded">
             <TabItem Header="Задание 1" Margin="-2,-2,-2,0" MouseLeftButtonDown="TabItem_MouseLeftButtonDown" MouseLeftButtonUp="TabItem_MouseLeftButtonUp_1">
                 <Grid Background="White" Margin="0,2,0,-2">
                     <Button x:Name="CityBtnTable" Content="T CITY" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" MouseLeftButtonDown="Button_MouseLeftButtonDown" Click="CityBtnTable_Click"/>
