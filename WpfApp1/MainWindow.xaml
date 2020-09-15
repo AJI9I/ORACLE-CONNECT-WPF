@@ -7,10 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="1019" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid  Margin="0,0,2,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="270*"/>
+            <RowDefinition Height="49*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="myDataGrid" HorizontalAlignment="Left" Height="299" Margin="322,10,0,0" VerticalAlignment="Top" Width="678"/>
+        <DataGrid x:Name="myDataGrid" HorizontalAlignment="Left" Height="299" Margin="322,10,0,0" VerticalAlignment="Top" Width="678" Grid.RowSpan="2"/>
         <Button x:Name="AddBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="AddBtn_Click"/>
         <Button x:Name="UpdateBtn" Content="Обновить" HorizontalAlignment="Left" Margin="221,218,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
         <Button x:Name="ResetBtn" Content="Сбросить" HorizontalAlignment="Left" Margin="120,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="ResetBtn_Click"/>
@@ -34,7 +38,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="DeleteBtn" Content="Удалить" HorizontalAlignment="Left" Margin="229,289,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
+        <Button x:Name="DeleteBtn" Content="Удалить" HorizontalAlignment="Left" Margin="229,19,0,0" VerticalAlignment="Top" Width="75" Height="20" Grid.Row="1"/>
         <Button x:Name="FindBtn" Content="Найти" HorizontalAlignment="Left" Margin="229,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="FindBtn_Click"/>
 
     </Grid>

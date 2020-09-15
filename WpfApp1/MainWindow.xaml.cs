@@ -48,14 +48,15 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
         QuerySql querySql = null;
-        ProgVar progVar;
+        ProgVar progVar = null;
         OracleConnection con = null;
+
         public MainWindow()
         {
             this.setConnection();
             progVar = new ProgVar();
-
             querySql = new QuerySql();
+
 
             InitializeComponent();
 
@@ -65,11 +66,13 @@ namespace WpfApp1
         private void setConnection()
         {
 
+            #region Альтернативное создание строки подключения
             OracleConnectionStringBuilder sb = new OracleConnectionStringBuilder();
             sb.DataSource = "localhost:1521/orcl";
             sb.DBAPrivilege = "SYSDBA";
             sb.UserID = "SYS";
             sb.Password = "3aPa3a19892811";
+            #endregion
 
             String connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
             con = new OracleConnection(connectionString);
@@ -86,10 +89,7 @@ namespace WpfApp1
         private void updateMyDataGrid() {
 
             OracleCommand cmd = con.CreateCommand();
-            //cmd.CommandText = "select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id WHERE UPPER(city.name) = UPPER('') or UPPER(firm.name) = UPPER('')";
             cmd.CommandText = "select * from document";
-
-            //cmd.CommandText = d;
             cmd.CommandType = CommandType.Text;
             OracleDataReader dr = cmd.ExecuteReader();
             DataTable dt = new DataTable();
@@ -97,34 +97,6 @@ namespace WpfApp1
             myDataGrid.ItemsSource = dt.DefaultView;
             dr.Close();
 
-        }
-        #endregion
-
-        #region
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            updateMyDataGrid();
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            con.Close();
-        }
-
-        private void TabItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            //VisibleCityFields();
-        }
-
-        private void TabItem_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
-        {
-            //String sql = "select FIRM_ID as ИД, name as Фирма, jur_city_id as сИД, post_city_id as фИД from firm ORDER BY name";
-            //this.AUD(99, sql);
-        }
-
-        private void Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-           
         }
         #endregion
 
@@ -225,8 +197,6 @@ namespace WpfApp1
         private void FindBtn_Click(object sender, RoutedEventArgs e)
         {
             String sql = "";
-            //"select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id WHERE UPPER(firm.name) = UPPER(:NAME) or UPPER(city.name) = UPPER(:POST_CITY_ID) ORDER BY city.name";
-            //sql = "select firm.name as НазваниеФирмы, j.name as ЮрАддрес, p.name as ПочтАддрес from firm left outer join city j on firm.jur_city_id = j.city_id left outer join city p on firm.post_city_id = p.city_id where upper(firm.name) = upper(:NAME) or upper(j.name) = upper(:POST_CITY_ID) or upper(p.name) = upper(:JUR_CITY_ID) group by ";
             this.AUD(2, sql);
         }
 
@@ -282,26 +252,12 @@ namespace WpfApp1
             switch (state) {
                 case 0:
                     cmd.CommandText = querySql.sqlAddCityTable(one);
-                    //cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
                     break;
                 case 1:
                     cmd.CommandText = querySql.sqlAddFirmTable(one, two, tre);
-                    //cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
-                    //cmd.Parameters.Add("POST_CITY_ID", OracleDbType.Decimal).Value = CityNameJurTextBox.Text;
-                    //cmd.Parameters.Add("JUR_CITY_ID", OracleDbType.Decimal).Value = CityNamePostTextBox.Text;
                     break;
                 case 2:
                     cmd.CommandText = querySql.sqlFindFirm(one, two);
-                    //cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
-                    //cmd.Parameters.Add("POST_CITY_ID", OracleDbType.Varchar2, 25).Value = CityNameJurTextBox.Text.ToString();
-                    //cmd.Parameters.Add("JUR_CITY_ID", OracleDbType.Varchar2, 25).Value = CityNamePostTextBox.Text.ToString();
-                    break;
-                case 3:
-                    
-                    break;
-                case 4:
-                    break;
-                default:
                     break;
 
             }
@@ -316,51 +272,21 @@ namespace WpfApp1
 
         #endregion
 
-        private void DataOne() { 
-        
-        }
-
         #region Клик на кнопку добавить запись
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             String sql = "";
             switch (progVar.TName) {
                 case "CITY":
-                //    sql = "INSERT INTO CITY(CITY_ID, NAME) " +
-                //"VALUES(supplier_seq.NEXTVAL, :NAME)";
                     this.AUD(0, sql);
                     break;
                 case "FIRM":
-                    //sql = querySql.SqlAddFirmTable;
-                //    sql = "INSERT INTO FIRM(FIRM_ID, NAME, POST_CITY_ID, JUR_CITY_ID) " +
-                //"VALUES(supplier_seq.NEXTVAL, :NAME, :POST_CITY_ID, :JUR_CITY_ID)";
                     this.AUD(1, sql);
                     break;
             }
         }
         #endregion
 
-        #region хлам
-        private void TabItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
-        {
-           
-        }
-
-        private void TabItem_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
-        private void TabItem_ContextMenuClosing(object sender, ContextMenuEventArgs e)
-        {
-
-        }
-
-        private void TabItem_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
-        #endregion
         
         //Выбор вкладки Задание 2
         private void TabItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -379,6 +305,55 @@ namespace WpfApp1
             this.AUD(99, sql);
         }
 
+        #region хлам
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            updateMyDataGrid();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            con.Close();
+        }
+
+        private void TabItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void TabItem_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+
+        #region хлам
+        private void TabItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+
+        }
+
+        private void TabItem_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+        private void TabItem_ContextMenuClosing(object sender, ContextMenuEventArgs e)
+        {
+
+        }
+
+        private void TabItem_MouseEnter(object sender, MouseEventArgs e)
+        {
+
+        }
+        #endregion
+        #endregion
 
     }
 }
