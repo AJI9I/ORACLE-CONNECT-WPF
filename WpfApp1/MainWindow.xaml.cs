@@ -41,18 +41,21 @@ namespace WpfApp1
         }
     }
 
-   
+
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        QuerySql querySql = null;
         ProgVar progVar;
         OracleConnection con = null;
         public MainWindow()
         {
             this.setConnection();
             progVar = new ProgVar();
+
+            querySql = new QuerySql();
 
             InitializeComponent();
 
@@ -142,7 +145,7 @@ namespace WpfApp1
 
         private void Button_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            int i = 0;
+           
         }
 
         private void CityBtnTable_Click(object sender, RoutedEventArgs e)
@@ -169,26 +172,38 @@ namespace WpfApp1
             this.AUD(99, sql);
         }
 
-
-       
-
+        //клик на кнопку FIRM
         private void FirmBtnTable_Click(object sender, RoutedEventArgs e)
         {
+            progVar.TName = "FIRM";
+
             Button btn = (Button)sender;
             VisibleFirmFields(btn.Content.ToString());
-            progVar.TName = "FIRM";
+
+            
 
             String sql = "select FIRM_ID as ИД, name as Фирма, jur_city_id as сИД, post_city_id as фИД from firm ORDER BY name";
             this.AUD(99, sql);
         }
 
+        
         private void VisibleFirmFields(string Content)
         {
             CityNameLabel.Content = "Название фирмы";
+            if (progVar.TName.ToString() == "FIRM") {
+                CityNameJURLabel.Content = "Город Юр";
+                CityNamePostLabel.Visibility = Visibility.Visible;
+                CityNamePostTextBox.Visibility = Visibility.Visible;
+            } 
+            if (progVar.TName.ToString() == "FIND") {
+                CityNameJURLabel.Content = "Город";
+                CityNamePostLabel.Visibility = Visibility.Hidden;
+                CityNamePostTextBox.Visibility = Visibility.Hidden;
+            } 
+
             CityNameJURLabel.Visibility = Visibility.Visible;
             CityNameJurTextBox.Visibility = Visibility.Visible;
-            CityNamePostLabel.Visibility = Visibility.Visible;
-            CityNamePostTextBox.Visibility = Visibility.Visible;
+            
             
 
             if (Content == "T FIRM") {
@@ -202,6 +217,29 @@ namespace WpfApp1
             }
         }
 
+        //клик на кнопку FIND
+        private void CityBtnFindTable_Click(object sender, RoutedEventArgs e)
+        {
+            progVar.TName = "FIND";
+
+            Button btn = (Button)sender;
+            VisibleFirmFields(btn.Content.ToString());
+            
+
+            String sql = "select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id ORDER BY city.name";
+            this.AUD(99, sql);
+
+        }
+
+        //клик на кнопку поиск
+        private void FindBtn_Click(object sender, RoutedEventArgs e)
+        {
+            String sql = "select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id WHERE UPPER(firm.name) = UPPER(:NAME) or UPPER(city.name) = UPPER(:POST_CITY_ID) ORDER BY city.name";
+            sql = "select firm.name as НазваниеФирмы, j.name as ЮрАддрес, p.name as ПочтАддрес from firm left outer join city j on firm.jur_city_id = j.city_id left outer join city p on firm.post_city_id = p.city_id where upper(firm.name) = upper(:NAME) or upper(j.name) = upper(:POST_CITY_ID) or upper(p.name) = upper(:JUR_CITY_ID) group by ";
+            this.AUD(2, sql);
+        }
+
+        #region скрытие открытие кнопок управления  НИЖНЯЯЯ
         private void BtnHidden() {
             //Надо проверить момент активности нажать можно нет
             AddBtn.Visibility = Visibility.Hidden;
@@ -217,46 +255,42 @@ namespace WpfApp1
             DeleteBtn.Visibility = Visibility.Visible;
             FindBtn.Visibility = Visibility.Hidden;
         }
-
-
-
-            private void CityBtnFindTable_Click(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            VisibleFirmFields(btn.Content.ToString());
-            progVar.TName = "FIND";
-
-            String sql = "select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id ORDER BY city.name";
-            this.AUD(99, sql);
-
-        }
         #endregion
 
+        #endregion
 
+        #region Оправляем запросы через эту функцию и принимаем ответ в датагрид
         private void AUD(int state, string sql) {
             
 
             OracleCommand cmd = con.CreateCommand();
             cmd.CommandText = sql;
             cmd.CommandType = CommandType.Text;
-            
-            
+
+            string one = CityNameTextBox.Text.ToString();
+            string two = CityNameJurTextBox.Text.ToString();
+            string tre = CityNamePostTextBox.Text.ToString();
+
+
 
             switch (state) {
                 case 0:
                     cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
                     break;
                 case 1:
-                    cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
-                    cmd.Parameters.Add("POST_CITY_ID", OracleDbType.Decimal).Value = CityNameJurTextBox.Text;
-                    cmd.Parameters.Add("JUR_CITY_ID", OracleDbType.Decimal).Value = CityNamePostTextBox.Text;
-                    break;
-                case 2:
-                    cmd.Parameters.Add("POST_N", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
-                    cmd.Parameters.Add("POST_CITY_ID", OracleDbType.Varchar2, 25).Value = CityNameJurTextBox.Text.ToString();
+                    cmd.CommandText = querySql.sqlAddFirmTable(one, two, tre);
+                    //cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
+                    //cmd.Parameters.Add("POST_CITY_ID", OracleDbType.Decimal).Value = CityNameJurTextBox.Text;
                     //cmd.Parameters.Add("JUR_CITY_ID", OracleDbType.Decimal).Value = CityNamePostTextBox.Text;
                     break;
+                case 2:
+                    cmd.CommandText = querySql.sqlFindFirm(one, two);
+                    //cmd.Parameters.Add("NAME", OracleDbType.Varchar2, 25).Value = CityNameTextBox.Text.ToString();
+                    //cmd.Parameters.Add("POST_CITY_ID", OracleDbType.Varchar2, 25).Value = CityNameJurTextBox.Text.ToString();
+                    //cmd.Parameters.Add("JUR_CITY_ID", OracleDbType.Varchar2, 25).Value = CityNamePostTextBox.Text.ToString();
+                    break;
                 case 3:
+                    
                     break;
                 case 4:
                     break;
@@ -273,10 +307,13 @@ namespace WpfApp1
             dr.Close();
         }
 
+        #endregion
+
         private void DataOne() { 
         
         }
 
+        #region Клик на кнопку добавить запись
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
             String sql = "";
@@ -287,22 +324,16 @@ namespace WpfApp1
                     this.AUD(0, sql);
                     break;
                 case "FIRM":
-                    sql = "INSERT INTO FIRM(FIRM_ID, NAME, POST_CITY_ID, JUR_CITY_ID) " +
-                "VALUES(supplier_seq.NEXTVAL, :NAME, :POST_CITY_ID, :JUR_CITY_ID)";
-
-                   
-
+                    //sql = querySql.SqlAddFirmTable;
+                //    sql = "INSERT INTO FIRM(FIRM_ID, NAME, POST_CITY_ID, JUR_CITY_ID) " +
+                //"VALUES(supplier_seq.NEXTVAL, :NAME, :POST_CITY_ID, :JUR_CITY_ID)";
                     this.AUD(1, sql);
                     break;
             }
         }
-        #region хлам
-        private void FindBtn_Click(object sender, RoutedEventArgs e)
-        {
-            String sql = "select city.name as Город, firm.name as Фирма, firm.jur_city_id as сИД, firm.post_city_id as фИД from city inner JOIN firm on city.city_id = firm.jur_city_id or city.city_id = firm.post_city_id WHERE UPPER(firm.name) = UPPER(:NAME) or UPPER(city.name) = UPPER(:POST_CITY_ID) ORDER BY city.name";
-            this.AUD(2, sql);
-        }
+        #endregion
 
+        #region хлам
         private void TabItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
            
@@ -323,17 +354,20 @@ namespace WpfApp1
 
         }
         #endregion
+        
+        //Выбор вкладки Задание 2
         private void TabItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             String sql = "select extract(year from DOCUMENT.DOC_DATE) as Год,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 1 then DOCUMENT.SUMM else 0 end) as Январь,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 2 then DOCUMENT.SUMM else 0 end) as Февраль,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 3 then DOCUMENT.SUMM else 0 end) as Март,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 4 then DOCUMENT.SUMM else 0 end) as Апрель,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 5 then DOCUMENT.SUMM else 0 end) as Май,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 6 then DOCUMENT.SUMM else 0 end) as Июнь,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 7 then DOCUMENT.SUMM else 0 end) as Июль,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 8 then DOCUMENT.SUMM else 0 end) as Август,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 9 then DOCUMENT.SUMM else 0 end) as Сентябрь,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 10 then DOCUMENT.SUMM else 0 end) as Октябрь,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 11 then DOCUMENT.SUMM else 0 end) as Ноябрь,  sum( case  extract(month from DOCUMENT.DOC_DATE) when 12 then DOCUMENT.SUMM else 0 end) as Декабрь from DOCUMENT group by extract(year from DOCUMENT.DOC_DATE) order by extract(year from DOCUMENT.DOC_DATE)";
             this.AUD(99, sql);
         }
 
+        //Кнопка добавить рандомное значение
         private void AddRandBtn_Click(object sender, RoutedEventArgs e)
         {
             String sql = "insert INTO DOCUMENT ( doc_id,doc_date, summ) VALUES (supplier_seq.NEXTVAL,TO_DATE(TRUNC(" +
             "DBMS_RANDOM.VALUE(TO_CHAR(DATE '1993-01-01', 'J'),"+
-                                "TO_CHAR(DATE '1995-12-31', 'J')))"+
+                                "TO_CHAR(DATE '2003-12-31', 'J')))"+
                                 ",'J'), 400)";
             this.AUD(99, sql);
 
