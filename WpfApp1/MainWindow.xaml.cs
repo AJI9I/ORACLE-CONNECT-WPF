@@ -16,6 +16,8 @@ using Oracle.ManagedDataAccess.Client;
 using Oracle.ManagedDataAccess.Types;
 using System.Configuration;
 using System.Data;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace WpfApp1
 {
@@ -42,10 +44,32 @@ namespace WpfApp1
     }
 
 
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    
+        public class MyEntity
+        {
+            public string MyColumn { get; set; }
+        }
+
+        public class MyContext : DbContext
+        {
+            // This property defines the table
+            public DbSet<MyEntity> MyTable { get; set; }
+
+            // This method connects the context with the database
+            protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            {
+                var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "test.db" };
+                var connectionString = connectionStringBuilder.ToString();
+                var connection = new SqliteConnection(connectionString);
+
+                optionsBuilder.UseSqlite(connection);
+            }
+        }
+
+        /// <summary>
+        /// Логика взаимодействия для MainWindow.xaml
+        /// </summary>
+        public partial class MainWindow : Window
     {
         QuerySql querySql = null;
         ProgVar progVar = null;
@@ -60,6 +84,10 @@ namespace WpfApp1
 
             InitializeComponent();
 
+            using (var db = new MyContext())
+            {
+                db.Database.EnsureCreated();
+            }
         }
 
         #region Работа с базой

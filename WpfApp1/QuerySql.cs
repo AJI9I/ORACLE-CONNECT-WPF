@@ -8,6 +8,7 @@ namespace WpfApp1
 {
     public class QuerySql
     {
+
         public string sqlAddFirmTable(string NAME, string JUR_CITY, string POST_CITY) {
 
             string query = "";
