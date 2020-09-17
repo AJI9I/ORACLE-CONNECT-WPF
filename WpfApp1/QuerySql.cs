@@ -130,5 +130,23 @@ namespace WpfApp1
                 "ORDER BY name");
         }
 
+        public string sqlUpdateCityTable(string id, string NAME)
+        {
+
+            //return String.Format("declare" +
+            //    " a int;" +
+            //    " b int;" +
+            //    " BEGIN" +
+            //    "select city.city_id as c into a from city where city.name = '{0}';" +
+            //    "update city set city.name='{1}' where city.city_id = a;" +
+            //    " COMMIT;" +
+            //    " end; ", id, NAME);
+
+            return String.Format(
+                
+                "update city set city.name='{0}' where city.city_id = " +
+                "(select city.city_id from city where city.name = '{1}')",NAME, id );
+        }
+
     }
 }
