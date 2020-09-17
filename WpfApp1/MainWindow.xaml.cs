@@ -92,7 +92,18 @@ namespace WpfApp1
         {
             progVar.TName = "TAB2";
             this.AUD(3);
+
+            Tab2ModelView();
         }
+
+        private void Tab2ModelView() {
+
+            //UpdateBtn.Visibility = Visibility.Visible;
+            //ResetBtn.Visibility = Visibility.Visible;
+
+        }
+
+
 
         //Кнопка добавить рандомное значение
         private void AddRandBtn_Click(object sender, RoutedEventArgs e)
@@ -209,7 +220,13 @@ namespace WpfApp1
         //клик на кнопку поиск
         private void FindBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.AUD(2);
+            if (progVar.TName == "FIRM") {
+                this.AUD(2);
+            }
+            if (progVar.TName == "TAB2")
+            {
+                this.AUD(10);
+            }
         }
 
 
@@ -275,6 +292,8 @@ namespace WpfApp1
                 string two = CityNameJurTextBox.Text.ToString();
                 string tre = CityNamePostTextBox.Text.ToString();
 
+                string four = FirmNameTextBox_Copy.Text.ToString();
+
                 string sql = "select * from city";
 
                 switch (state)
@@ -313,6 +332,9 @@ namespace WpfApp1
                         break;
                     case 8:
                         sql = querySql.sqlUpdateCityTable(progVar.id, one);
+                        break;
+                    case 10:
+
                         break;
                 }
                 cmd.CommandText = sql;

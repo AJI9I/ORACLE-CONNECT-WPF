@@ -35,6 +35,14 @@
             <TabItem Header="Задание 2" Margin="3,-2,-7,0" MouseLeftButtonDown="TabItem_MouseLeftButtonDown_1" ContextMenuOpening="TabItem_ContextMenuOpening" IsEnabledChanged="TabItem_IsEnabledChanged" ContextMenuClosing="TabItem_ContextMenuClosing" MouseEnter="TabItem_MouseEnter" MouseLeftButtonUp="TabItem_MouseLeftButtonUp">
                 <Grid Background="White">
                     <Button x:Name="AddRandBtn" Content="Сгенерировать значение" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="AddRandBtn_Click"/>
+                    <TextBox x:Name="FirmNameTextBox_Copy" HorizontalAlignment="Left" Height="23" Margin="128,48,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150"/>
+                    <Label x:Name="FirmNameLabel_Copy" Content="Название Фирмы" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="CityNameJURLabel_Copy" Content="c" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="FirmMinDataTextBox" HorizontalAlignment="Left" Height="23" Margin="40,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45"/>
+                    <TextBox x:Name="FirmMaxTextBox" HorizontalAlignment="Left" Height="23" Margin="128,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45"/>
+                    <Label x:Name="CityNameJURLabel_Copy1" Content="по" HorizontalAlignment="Left" Margin="92,93,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="CityNameJURLabel_Copy2" Content="года" HorizontalAlignment="Left" Margin="197,93,0,0" VerticalAlignment="Top"/>
+
                 </Grid>
             </TabItem>
         </TabControl>

@@ -97,6 +97,31 @@ namespace WpfApp1
                 "order by extract(year from DOCUMENT.DOC_DATE)");
         }
 
+
+        public string sqlGetDataSummForFirmTable(string Name)
+        {
+            return String.Format("select extract(year from DOCUMENT.DOC_DATE) as Год,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 1 then DOCUMENT.SUMM else 0 end) as Январь,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 2 then DOCUMENT.SUMM else 0 end) as Февраль,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 3 then DOCUMENT.SUMM else 0 end) as Март,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 4 then DOCUMENT.SUMM else 0 end) as Апрель,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 5 then DOCUMENT.SUMM else 0 end) as Май,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 6 then DOCUMENT.SUMM else 0 end) as Июнь,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 7 then DOCUMENT.SUMM else 0 end) as Июль,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 8 then DOCUMENT.SUMM else 0 end) as Август,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 9 then DOCUMENT.SUMM else 0 end) as Сентябрь,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 10 then DOCUMENT.SUMM else 0 end) as Октябрь,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 11 then DOCUMENT.SUMM else 0 end) as Ноябрь,  " +
+                "sum( case  extract(month from DOCUMENT.DOC_DATE) when 12 then DOCUMENT.SUMM else 0 end) as Декабрь " +
+                "from DOCUMENT" +
+                "where  " +
+                "group by extract(year from DOCUMENT.DOC_DATE) " +
+                "order by extract(year from DOCUMENT.DOC_DATE)");
+        }
+
+
+
+
         public string sqlRandDataSummTable() {
             return String.Format("insert INTO DOCUMENT ( doc_id,doc_date, summ) " +
                 "VALUES (supplier_seq.NEXTVAL," +
