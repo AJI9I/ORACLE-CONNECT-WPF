@@ -275,7 +275,7 @@ namespace WpfApp1
 
         #endregion
 
-        #region Оправляем запросы через эту функцию и принимаем ответ в датагрид Oracle
+        #region Оправляем запросы через этот метод и принимаем ответ в датагрид Oracle
         private void AUD(int state) {
 
             if (progVar.DbName == "SQLITE")
@@ -357,7 +357,7 @@ namespace WpfApp1
 
         #endregion
 
-        #region Оправляем запросы через эту функцию и принимаем ответ в датагрид SQLite
+        #region Оправляем запросы через этот метод и принимаем ответ в датагрид SQLite
         
         #region контекст
         ApplicationContext db;
