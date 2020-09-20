@@ -1,26 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using Oracle.ManagedDataAccess.Client;
-using Oracle.ManagedDataAccess.Types;
+
 using System.Configuration;
 using System.Data;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Core.Objects;
+
 using System.Data.SqlClient;
 using System.Threading;
 
@@ -475,7 +467,7 @@ namespace WpfApp1
             //firm = db.Database.SqlQuery<Firm>(query).ToList();
 
 
-            using (SqlConnection conn = new SqlConnection("Data Source = C:\\Users\\yaaal\\OneDrive\\Рабочий стол\\app\\Проект на сдачу\\WpfApp1 — копия\\WpfApp1\\mobile.db;"))
+            using (SqlConnection conn = new SqlConnection("Data Source = ./mobile.db;"))
             {
                 //define the SqlCommand object
                 SqlCommand cmd = new SqlCommand(query, conn);
