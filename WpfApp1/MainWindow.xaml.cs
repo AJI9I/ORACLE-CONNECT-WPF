@@ -22,6 +22,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Core.Objects;
 using System.Data.SqlClient;
+using System.Threading;
 
 namespace WpfApp1
 {
@@ -123,10 +124,10 @@ namespace WpfApp1
             switch (progVar.TName)
             {
                 case "CITY":
-                    this.AUD(8);
+                    Task.Run(()=>this.AUD(8));
                     break;
                 case "FIRM":
-                    this.AUD(1);
+                    Task.Run(() => this.AUD(1));
                     break;
             }
         }
@@ -162,7 +163,7 @@ namespace WpfApp1
             VisibleFirmFields();
             TexBoxReset();
 
-            this.AUD(6);
+            Task.Run(() => this.AUD(6));
         }
 
         private void VisibleFirmFields()
@@ -288,11 +289,16 @@ namespace WpfApp1
                 OracleCommand cmd = con.CreateCommand();
                 cmd.CommandType = CommandType.Text;
 
-                string one = CityNameTextBox.Text.ToString();
-                string two = CityNameJurTextBox.Text.ToString();
-                string tre = CityNamePostTextBox.Text.ToString();
+                string one = null;
+                Dispatcher.Invoke(() => one = CityNameTextBox.Text.ToString());
+                string two = null;
+                Dispatcher.Invoke(() => two = CityNameJurTextBox.Text.ToString());
 
-                string four = FirmNameTextBox_Copy.Text.ToString();
+                string tre = null;
+                Dispatcher.Invoke(() => tre = CityNamePostTextBox.Text.ToString());
+
+                string four = null;
+                Dispatcher.Invoke(() => four = FirmNameTextBox_Copy.Text.ToString());
 
                 string sql = "select * from city";
 
@@ -343,7 +349,7 @@ namespace WpfApp1
                 DataTable dt = new DataTable();
                 dt.Load(dr);
                 var v = dt.HasErrors;
-                myDataGrid.ItemsSource = dt.DefaultView;
+                Dispatcher.BeginInvoke(new ThreadStart(delegate { myDataGrid.ItemsSource = dt.DefaultView; }));
 
                 dr.Close();
             }
