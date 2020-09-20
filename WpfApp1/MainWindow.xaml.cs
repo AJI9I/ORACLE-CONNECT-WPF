@@ -81,7 +81,12 @@ namespace WpfApp1
             OracleDataReader dr = cmd.ExecuteReader();
             DataTable dt = new DataTable();
             dt.Load(dr);
-            myDataGrid.ItemsSource = dt.DefaultView;
+
+            Dispatcher.BeginInvoke(new ThreadStart(delegate
+            {
+                myDataGrid.ItemsSource = dt.DefaultView;
+            })) ;
+
             dr.Close();
 
         }
@@ -580,7 +585,6 @@ namespace WpfApp1
             {
                 if (progVar.TName == "CITY")
                 {
-
                     CityNameTextBox.Text = dataRowView["Город"].ToString();
                     progVar.id = dataRowView["Город"].ToString();
                 }
@@ -633,7 +637,7 @@ namespace WpfApp1
         #region хлам
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            updateMyDataGrid();
+            Task.Run(() => updateMyDataGrid());
         }
 
         private void Window_Closed(object sender, EventArgs e)
