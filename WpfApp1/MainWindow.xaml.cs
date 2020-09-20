@@ -92,7 +92,7 @@ namespace WpfApp1
         private void TabItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             progVar.TName = "TAB2";
-            this.AUD(3);
+            Task.Run(() => this.AUD(3));
 
             Tab2ModelView();
         }
@@ -109,9 +109,9 @@ namespace WpfApp1
         //Кнопка добавить рандомное значение
         private void AddRandBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.AUD(4);
+            Task.Run(() => this.AUD(4));
 
-            this.AUD(3);
+            Task.Run(() => this.AUD(3));
         }
 
         private void TabGrid_Loaded(object sender, RoutedEventArgs e)
@@ -151,7 +151,7 @@ namespace WpfApp1
             BtnVisible();
             TexBoxReset();
 
-            this.AUD(7);
+            Task.Run(() => this.AUD(7));
         }
 
         //клик на кнопку FIRM
@@ -215,18 +215,18 @@ namespace WpfApp1
 ;
             VisibleFirmFields();
 
-            this.AUD(5);
+            Task.Run(() => this.AUD(5));
         }
 
         //клик на кнопку поиск
         private void FindBtn_Click(object sender, RoutedEventArgs e)
         {
             if (progVar.TName == "FIRM") {
-                this.AUD(2);
+                Task.Run(() => this.AUD(2));
             }
             if (progVar.TName == "TAB2")
             {
-                this.AUD(10);
+                Task.Run(() => this.AUD(10));
             }
         }
 
@@ -561,10 +561,10 @@ namespace WpfApp1
         {
             switch (progVar.TName) {
                 case "CITY":
-                    this.AUD(0);
+                    Task.Run(() => this.AUD(0));
                     break;
                 case "FIRM":
-                    this.AUD(1);
+                    Task.Run(() => this.AUD(1));
                     break;
             }
         }
