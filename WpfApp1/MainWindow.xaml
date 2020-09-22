@@ -7,15 +7,19 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="1019" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid  Margin="0,0,2,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="270*"/>
+            <RowDefinition Height="49*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="myDataGrid" HorizontalAlignment="Left" Height="299" Margin="322,10,0,0" VerticalAlignment="Top" Width="678"/>
+        <DataGrid x:Name="myDataGrid" HorizontalAlignment="Left" Height="299" Margin="322,10,0,0" VerticalAlignment="Top" Width="678" Grid.RowSpan="2" SelectionChanged="myDataGrid_SelectionChanged" AutoGenerateColumns="True"/>
         <Button x:Name="AddBtn" Content="Добавить" HorizontalAlignment="Left" Margin="10,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="AddBtn_Click"/>
-        <Button x:Name="UpdateBtn" Content="Обновить" HorizontalAlignment="Left" Margin="221,218,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
-        <Button x:Name="ResetBtn" Content="Сбросить" HorizontalAlignment="Left" Margin="120,218,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
-        <TabControl x:Name="TabGrid" HorizontalAlignment="Left" Height="200" Margin="10,13,0,0" VerticalAlignment="Top" Width="294">
-            <TabItem Header="Задание 1" Margin="-2,-2,-2,0" MouseLeftButtonDown="TabItem_MouseLeftButtonDown">
+        <Button x:Name="UpdateBtn" Content="Обновить" HorizontalAlignment="Left" Margin="221,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="UpdateBtn_Click"/>
+        <Button x:Name="ResetBtn" Content="Сбросить" HorizontalAlignment="Left" Margin="120,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="ResetBtn_Click"/>
+        <TabControl x:Name="TabGrid" HorizontalAlignment="Left" Height="200" Margin="10,13,0,0" VerticalAlignment="Top" Width="294" Loaded="TabGrid_Loaded">
+            <TabItem Header="Задание 1" Margin="-2,-2,-2,0" MouseLeftButtonDown="TabItem_MouseLeftButtonDown" MouseLeftButtonUp="TabItem_MouseLeftButtonUp_1">
                 <Grid Background="White" Margin="0,2,0,-2">
                     <Button x:Name="CityBtnTable" Content="T CITY" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" MouseLeftButtonDown="Button_MouseLeftButtonDown" Click="CityBtnTable_Click"/>
                     <Button x:Name="FirmBtnTable" Content="T FIRM" HorizontalAlignment="Left" Margin="170,10,0,0" VerticalAlignment="Top" Width="75" Click="FirmBtnTable_Click"/>
@@ -31,10 +35,18 @@
             <TabItem Header="Задание 2" Margin="3,-2,-7,0" MouseLeftButtonDown="TabItem_MouseLeftButtonDown_1" ContextMenuOpening="TabItem_ContextMenuOpening" IsEnabledChanged="TabItem_IsEnabledChanged" ContextMenuClosing="TabItem_ContextMenuClosing" MouseEnter="TabItem_MouseEnter" MouseLeftButtonUp="TabItem_MouseLeftButtonUp">
                 <Grid Background="White">
                     <Button x:Name="AddRandBtn" Content="Сгенерировать значение" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="AddRandBtn_Click"/>
+                    <TextBox x:Name="FirmNameTextBox_Copy" HorizontalAlignment="Left" Height="23" Margin="128,48,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="150"/>
+                    <Label x:Name="FirmNameLabel_Copy" Content="Название Фирмы" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="CityNameJURLabel_Copy" Content="c" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="FirmMinDataTextBox" HorizontalAlignment="Left" Height="23" Margin="40,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45"/>
+                    <TextBox x:Name="FirmMaxTextBox" HorizontalAlignment="Left" Height="23" Margin="128,93,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="45"/>
+                    <Label x:Name="CityNameJURLabel_Copy1" Content="по" HorizontalAlignment="Left" Margin="92,93,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="CityNameJURLabel_Copy2" Content="года" HorizontalAlignment="Left" Margin="197,93,0,0" VerticalAlignment="Top"/>
+
                 </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="DeleteBtn" Content="Удалить" HorizontalAlignment="Left" Margin="229,289,0,0" VerticalAlignment="Top" Width="75" Height="20"/>
+        <Button x:Name="DeleteBtn" Content="Удалить" HorizontalAlignment="Left" Margin="229,19,0,0" VerticalAlignment="Top" Width="75" Height="20" Grid.Row="1"/>
         <Button x:Name="FindBtn" Content="Найти" HorizontalAlignment="Left" Margin="229,218,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="FindBtn_Click"/>
 
     </Grid>
